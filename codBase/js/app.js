@@ -2,7 +2,15 @@ var Calculadora = {
   operador : "",
   valorA : 0.00,
   valorB : 0.00,
-  inicializar : true,
+  finOperacion : false,
+
+  //inicializa la calculadora
+  inicializar : function(){
+    Calculadora.valorA = 0.00;
+    Calculadora.valorB = 0.00;
+    Calculadora.operador = "";
+    Calculadora.finOperacion = false
+  },
 
   //Trunca la pantalla a solo 8 digitos
   truncaCadena: function(cadena){
@@ -27,7 +35,10 @@ var Calculadora = {
   //Imprime el resultado en la pantalla
   imprimeDigito: function(elemento){
       var pantalla = document.getElementById('display')
-      if(pantalla.innerText.indexOf("0") === 0 && elemento === "0" && pantalla.innerText.indexOf(".") != 1){
+      if(Calculadora.finOperacion === true){
+        pantalla.innerText = elemento;
+        Calculadora.inicializar();
+      }else if(pantalla.innerText.indexOf("0") === 0 && elemento === "0" && pantalla.innerText.indexOf(".") != 1){
         pantalla.innerText = "0";
       }else if(pantalla.innerText.indexOf("0") === 0 && elemento ==="." && pantalla.innerText.indexOf(".") != 1){
         pantalla.innerText = Calculadora.truncaCadena(pantalla.innerText + elemento);
@@ -38,8 +49,6 @@ var Calculadora = {
       }else{
         pantalla.innerText = Calculadora.truncaCadena(pantalla.innerText + elemento);
       }
-
-//      document.getElementById('display').innerText = document.getElementById('display').innerText + elemento
   },
 
   calculaOperacion : function(operador){
@@ -66,6 +75,7 @@ var Calculadora = {
     }
     document.getElementById('display').innerText = Calculadora.truncaCadena(resultado.toString())
   },
+
 
   //Funcion asigna eventos a la teclas
   ini: function(){
@@ -94,6 +104,7 @@ var Calculadora = {
     //Asigna evento a la tecla ON/C
     document.getElementById('on').addEventListener('click', function(){
       document.getElementById('display').innerText = "0";
+      Calculadora.inicializar();
     })
 
     //Asigna evento a la tecla PUNTO(.)
@@ -136,7 +147,8 @@ var Calculadora = {
     })
 
     document.getElementById("igual").addEventListener('click', function(){
-      Calculadora.calculaOperacion(Calculadora.operador)
+      Calculadora.calculaOperacion(Calculadora.operador);
+      Calculadora.finOperacion = true;
     })
   }
 
